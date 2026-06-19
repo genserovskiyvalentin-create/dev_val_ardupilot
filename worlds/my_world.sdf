@@ -27,10 +27,15 @@
       name="gz::sim::systems::NavSat">
     </plugin>
 
-        <!-- Плагин ветра для Gazebo 8 (Harmonic) -->
-    <plugin filename="gz-sim-wind-effects-system" name="gz::sim::systems::WindEffects">
-      <linear_velocity>10 0 0</linear_velocity> <!-- Ветер 10 м/с по оси X -->
-    </plugin>
+<!-- ВЕТЕР: задаётся через отдельный тег -->
+<wind>
+  <linear_velocity>0 0 0</linear_velocity>
+</wind>
+
+<!-- Плагин обработки ветра -->
+<plugin filename="gz-sim-wind-effects-system" name="gz::sim::systems::WindEffects">
+  <force_approximation_scaling_factor>1</force_approximation_scaling_factor>
+</plugin>
 
 
     <scene>
@@ -129,9 +134,11 @@
 
 <!-- Красный кубик для отслеживания -->
 <model name="red_cube">
-  <pose>5 0 0.5 0 0 0</pose>
+  <pose>50 0 20 0 0 0</pose>
   <static>false</static>
   <link name="cube_link">
+   <enable_wind>true</enable_wind> 
+  <gravity>false</gravity>
     <pose>0 0 0 0 0 0</pose>
     <visual name="cube_visual">
       <pose>0 0 0 0 0 0</pose>
@@ -155,6 +162,13 @@
       </geometry>
     </collision>
   </link>
+  
+    <!-- Плагин управления скоростью -->
+  <plugin
+    filename="gz-sim-velocity-control-system"
+    name="gz::sim::systems::VelocityControl">
+    <topic>/model/red_cube/cmd_vel</topic>
+  </plugin>
 </model>
 
 
